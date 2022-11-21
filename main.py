@@ -1,6 +1,7 @@
 from tkinter import *
 from tkinter import ttk
 import pymysql
+import MySQLdb
 import os
 from dotenv import load_dotenv
 
@@ -24,39 +25,53 @@ def dbTrabajadores():
 
 #database connection
 
-# class Database():
-#     def __init__(self):
-#         self.connection = pymysql.connect(
-#             host = 
-#             user = 
-#             password = 
-#             db = 
-#         )
-print(os.getenv("TEST"))
+class Database():
+    def __init__(self):
+        self.connection = pymysql.connect(
+            host = os.getenv("HOST"),
+            user = os.getenv("USER"),
+            password = os.getenv("PASSWORD"),
+            db = os.getenv("DB_NAME"),
+            ssl_verify_identity= True,
+            ssl = {
+                "ca": "/etc/ssl/cert.pem"
+            }
+        )
+        self.cursor = self.connection.cursor()
 
+    def getAllusers(self):
+        query = "select * from workers"
+        try:
+            self.cursor.execute(query)
+            users = self.cursor.fetchall()
+            for i in users:
+                print("name", i[0])
+        except Exception as e:
+            pass
+
+
+db = Database()
+db.getAllusers()
 #Función para Salir de la App
 
 def salir():
     print("*** Fin del sistema")
     vent.destroy()
 
-    
 def guardarDatos():
     print("")
  
-
 def cancelar():
     print("")
 
-"""
-Método para Agregar Trabajadores a la base de Datos
-
-"""    
+"""Método para Agregar Trabajadores a la base de Datos"""
+    
 def AgregarFrm():
-    # invocar formulario
+
     frmA = Toplevel(vent)
     frmA .geometry("800x600")
     frmA .title("Módulo Agregar Datos")
+
     #vent.iconify()  
     lc = Label(frmA , text="Clave: ").grid(row= 2, column=2)
     txtClave = Entry(frmA, width=5).grid(row= 2, column=10)
@@ -67,17 +82,15 @@ def AgregarFrm():
     btnGuardar = Button(frmA, text="Guardar Datos", command=guardarDatos).grid(row= 12, column=7)
     btnCancelar = Button(frmA, text="Cancelar", command=frmA.destroy).grid(row= 12, column=10)
     
-# def cancelar():
-#     frmA.destroy()
-  
 
-"""
-Método para buscar trabajadores
-"""
+""" Método para buscar trabajadores """
+
 def agregarTrabajador():
+
     frmA = Toplevel(vent)
     frmA .geometry("800x600")
     frmA .title("Módulo Agregar Datos")
+
     #vent.iconify()  
     lc = Label(frmA , text="Clave: ").grid(row= 2, column=2)
     txtClave = Entry(frmA, width=5).grid(row= 2, column=10)
@@ -89,9 +102,11 @@ def agregarTrabajador():
     btnCancelar = Button(frmA, text="Cancelar", command=frmA.destroy).grid(row= 12, column=10)
     
 def buscarTrabajador():
+
     frmA = Toplevel(vent)
     frmA .geometry("800x600")
     frmA .title("Módulo Buscar trabajador")
+
     #vent.iconify()  
     lc = Label(frmA , text="Clave: ").grid(row= 2, column=2)
     txtClave = Entry(frmA, width=5).grid(row= 2, column=10)
@@ -102,6 +117,7 @@ def borrarTrabajador():
     frmA = Toplevel(vent)
     frmA .geometry("800x600")
     frmA .title("Módulo Borrar trabajador")
+
     #vent.iconify()  
     lc = Label(frmA , text="Clave: ").grid(row= 2, column=2)
     txtClave = Entry(frmA, width=5).grid(row= 2, column=10)
@@ -115,23 +131,26 @@ menubar = Menu(vent)
 
 # Construimos opciones del menu
 menutrab = Menu(menubar, tearoff=0)
+menubar.add_cascade(label="Trabajadores", menu=menutrab)
+
 menutrab.add_command(label="Agregar", command=AgregarFrm)
 #menutrab.add_command(label="Buscar", command=agregarTrabajador)
 menutrab.add_command(label="Buscar", command=buscarTrabajador)
 menutrab.add_command(label="Borrar", command=borrarTrabajador)
-menubar.add_cascade(label="Trabajadores", menu=menutrab)
+
 
 # Dibujar el menu para los reportes
 menurep = Menu(menubar, tearoff=0)
+menubar.add_cascade(label="Reportes", menu=menurep)
 menurep.add_command(label="Pantalla", command="mensaje")
 menurep.add_command(label="PDF", command="mensaje")
-menubar.add_cascade(label="Reportes", menu=menurep)
 
 # Dibujar el menu para salir de la app
 menusalir = Menu(menubar, tearoff=0)
+menubar.add_cascade(label="¿Quienes somos?", menu=menusalir)
+
 menusalir.add_command(label="Créditos", command="mensaje")
 menusalir.add_command(label="Salir", command=salir)
-menubar.add_cascade(label="¿Quienes somos?", menu=menusalir)
 
 # display the menu
 vent.config(menu=menubar)
