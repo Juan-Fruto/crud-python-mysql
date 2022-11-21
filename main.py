@@ -1,13 +1,10 @@
-"""
-Nombre: dashboard.py
-Objetivo: construye la ventana principal de la aplicación de base de datos.
-Autor: alumnos de SO
-Fecha: 07/10/2022
-"""
-
 from tkinter import *
 from tkinter import ttk
 import pymysql
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
 
 # Creamos ventana
 vent = Tk()
@@ -25,10 +22,20 @@ def dbTrabajadores():
             password = ""
         ) 
 
+#database connection
 
-"""
-Función para Salir de la App
-"""
+# class Database():
+#     def __init__(self):
+#         self.connection = pymysql.connect(
+#             host = 
+#             user = 
+#             password = 
+#             db = 
+#         )
+print(os.getenv("TEST"))
+
+#Función para Salir de la App
+
 def salir():
     print("*** Fin del sistema")
     vent.destroy()
