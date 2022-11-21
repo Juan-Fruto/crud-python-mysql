@@ -1,6 +1,7 @@
-create table wokers(
-    id varchar(10) primary key not null,
-    nameWorker varchar(90) not null,
-    phone varchar(10) unique,
-    designation varchar(20) not null
+CREATE TABLE workers(
+    id VARCHAR(10) PRIMARY KEY NOT NULL,
+    nameWorker VARCHAR(90) NOT NULL,
+    phone VARCHAR(10) UNIQUE,
+    designation VARCHAR(20) NOT NULL,
+    salary  DECIMAL(13, 2)
 );
